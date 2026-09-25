@@ -6,6 +6,7 @@
   const submitButton = document.querySelector('#submit-button');
   const errorBox = document.querySelector('#form-error');
   const successScreen = document.querySelector('#success-screen');
+  const formContent = document.querySelector('#form-content');
   const startedAt = document.querySelector('#formStartedAt');
   let submitting = false;
   let timeoutId;
@@ -118,6 +119,48 @@
     form.querySelectorAll('input[type="date"]').forEach(updateDateFieldState);
   }
 
+
+
+  // sastR休業日（東京不在のため、制作・店頭受取・発送・設置対応不可）
+  const CLOSED_RANGES = [
+    ['2026-10-14', '2026-10-22'],
+    ['2026-11-10', '2026-11-11']
+  ];
+
+  function parseDate(value) {
+    if (!value) return null;
+    const [y, m, d] = value.split('-').map(Number);
+    return new Date(y, m - 1, d, 12, 0, 0, 0);
+  }
+
+  function addDaysToValue(value, days) {
+    const date = parseDate(value);
+    date.setDate(date.getDate() + days);
+    return formatLocalDate(date);
+  }
+
+  function inClosedRange(value) {
+    return CLOSED_RANGES.some(([start, end]) => value >= start && value <= end);
+  }
+
+  function unavailableDateMessage(field) {
+    if (!field.value) return '';
+    // 店頭受取・スタンド花は休業日そのものを受付不可にする。
+    if (field.id === 'pickupDate' || field.id === 'standDate') {
+      return inClosedRange(field.value) ? 'この日は休業のため、ご予約を承ることができません。別の日をお選びください。' : '';
+    }
+    if (field.id === 'deliveryDate') {
+      // 配送は地域により発送が到着1〜2日前になるため、到着日から逆算した発送候補日が
+      // 休業期間に重なる場合も安全側で受付不可にする。休業期間中の到着も受付不可。
+      const previous1 = addDaysToValue(field.value, -1);
+      const previous2 = addDaysToValue(field.value, -2);
+      if (inClosedRange(field.value) || inClosedRange(previous1) || inClosedRange(previous2)) {
+        return '休業期間と発送日が重なるため、この到着日は承ることができません。別の日をお選びください。';
+      }
+    }
+    return '';
+  }
+
   function updateMessageContent() {
     const type = selectedValue('messageType');
     const label = document.querySelector('#message-content-label');
@@ -144,6 +187,13 @@
   }
 
   function validateCustomFields() {
+    for (const id of ['pickupDate', 'deliveryDate', 'standDate']) {
+      const field = document.getElementById(id);
+      if (!field || field.disabled || !field.value) continue;
+      const message = unavailableDateMessage(field);
+      field.setCustomValidity(message);
+      if (message) return field;
+    }
     const phoneFields = ['phone', 'recipientPhone'];
     for (const id of phoneFields) {
       const field = document.getElementById(id);
@@ -252,7 +302,7 @@
     if (!data || data.source !== 'sastr-order-form') return;
     clearTimeout(timeoutId);
     if (data.ok) {
-      form.hidden = true;
+      formContent.hidden = true;
       successScreen.hidden = false;
       successScreen.focus();
       window.scrollTo({ top: 0, behavior: 'smooth' });

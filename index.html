@@ -10,6 +10,7 @@
 </head>
 <body>
   <main class="page-shell">
+    <div id="form-content">
     <header class="hero">
       <img class="brand-logo" src="./assets/sastr-logo.png" alt="sastR - stop and smell the Roses.">
       <p class="eyebrow">ORDER FORM</p>
@@ -98,7 +99,7 @@
         <div class="input-suffix"><input id="budget" name="budget" type="number" inputmode="numeric" min="1" max="10000000" step="1" placeholder="例：5000" required><span>円</span></div>
         <fieldset class="inline-options"><legend>消費税 <span class="required">必須</span></legend><label><input type="radio" name="tax" value="予算に含む" required><span>予算に含む</span></label><label><input type="radio" name="tax" value="予算に含まない"><span>予算に含まない</span></label></fieldset>
         <fieldset class="inline-options conditional" data-show-when="receiveMethod:配送"><legend>送料 <span class="required">必須</span></legend><label><input type="radio" name="shipping" value="予算に含む"><span>予算に含む</span></label><label><input type="radio" name="shipping" value="予算に含まない"><span>予算に含まない</span></label></fieldset>
-        <p class="note">※アレンジメントは税抜5,000円（税込5,500円）〜、お祝いスタンド花は税抜30,000円（税込33,000円）〜承ります。送料・配送料・回収費等は別途となります。</p>
+        <p class="note">※アレンジメントは税抜5,000円（税込5,500円）〜、お祝いスタンド花は税抜30,000円（税込33,000円）〜承ります。送料・配送料・回収費等は別途となります。<br>※送料を予算に含む場合、お届け先地域によってはご予算の調整をご相談させていただく場合があります。</p>
       </section>
 
       <div class="gift-only" data-hide-when="purpose:ご自宅用">
@@ -154,13 +155,15 @@
       <button id="submit-button" class="submit-button" type="submit"><span class="button-label">注文内容を送信する</span><span class="button-loading" hidden>送信しています…</span></button>
       <p class="submit-note">送信後、内容を確認のうえ、原則24時間以内にご入力いただいたメールアドレスへsastRよりご連絡いたします。<br>24時間を過ぎても返信がない場合は、お手数ですがInstagramのDMよりお問い合わせください。</p>
     </form>
+    </div>
 
     <section id="success-screen" class="success-screen" hidden tabindex="-1">
       <div class="success-mark" aria-hidden="true">✓</div>
       <p class="eyebrow">THANK YOU</p>
       <h2>ご注文内容を送信しました💐</h2>
-      <p>ありがとうございます。<br>内容を確認のうえ、sastRよりご連絡いたします。</p>
-      <div class="info-box"><strong>この時点ではご注文確定ではありません。</strong><p>sastRからの返信をお待ちください。</p></div>
+      <p>ありがとうございます。<br>お伺いした内容をもとに、<br>心を込めてお作りいたします。</p>
+      <p>内容を確認のうえ、sastRよりご連絡いたします。</p>
+      <div class="info-box"><strong>※この時点ではご注文確定ではありません。</strong><p>sastRからの返信をお待ちください。</p></div>
     </section>
   </main>
   <iframe name="submit-frame" id="submit-frame" title="送信結果" hidden></iframe>

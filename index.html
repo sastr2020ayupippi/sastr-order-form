@@ -1,0 +1,168 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="sastR 花束・アレンジメント注文フォーム">
+  <title>sastR｜花束・アレンジメントのご注文</title>
+  <link rel="stylesheet" href="./styles.css">
+  <script src="./script.js" defer></script>
+</head>
+<body>
+  <main class="page-shell">
+    <header class="hero">
+      <img class="brand-logo" src="./assets/sastr-logo.png" alt="sastR - stop and smell the Roses.">
+      <p class="eyebrow">ORDER FORM</p>
+      <h1>花束・アレンジメントのご注文</h1>
+      <p>sastRでは、その日に出会える季節のお花を使って<br>花束やアレンジメントをお作りしています。</p>
+      <p>ご用途やイメージ、好きな雰囲気などを<br class="mobile-break">お聞かせください。<br>お伺いした内容をもとに、<br class="mobile-break">お花を選んでお作りします💐</p>
+    </header>
+
+    <noscript><div class="notice error">このフォームの送信にはJavaScriptが必要です。ブラウザの設定でJavaScriptを有効にしてください。</div></noscript>
+
+    <form id="order-form" class="order-form" method="post" target="submit-frame" novalidate>
+      <input type="text" name="website" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true">
+      <input type="hidden" name="formStartedAt" id="formStartedAt">
+
+      <section class="form-section" aria-labelledby="product-heading">
+        <div class="section-number">01</div>
+        <h2 id="product-heading">ご希望の商品・内容 <span class="required">必須</span></h2>
+        <fieldset class="choice-grid">
+          <legend class="sr-only">ご希望の商品を1つ選択</legend>
+          <label class="choice-card"><input type="radio" name="product" value="花束" required><span><strong>花束</strong><small>お渡し後、花瓶に活けてお楽しみいただくタイプ</small></span></label>
+          <label class="choice-card"><input type="radio" name="product" value="アレンジメント"><span><strong>アレンジメント</strong><small>器に吸水スポンジをセットし、そのまま飾れるタイプ。税抜5,000円（税込5,500円）〜（送料別）</small></span></label>
+          <label class="choice-card"><input type="radio" name="product" value="お祝いスタンド花"><span><strong>お祝いスタンド花</strong><small>開店・周年・公演などに。税抜30,000円（税込33,000円）〜（配送料・回収費等は別途）</small></span></label>
+          <label class="choice-card"><input type="radio" name="product" value="店舗装花"><span><strong>店舗装花</strong></span></label>
+          <label class="choice-card"><input type="radio" name="product" value="その他"><span><strong>その他</strong></span></label>
+        </fieldset>
+        <div class="conditional" data-show-when="product:その他">
+          <label for="productOther">ご希望の内容 <span class="required">必須</span></label>
+          <textarea id="productOther" name="productOther" rows="3" maxlength="500"></textarea>
+        </div>
+      </section>
+
+      <section class="form-section" aria-labelledby="purpose-heading">
+        <div class="section-number">02</div>
+        <h2 id="purpose-heading">ご用途 <span class="required">必須</span></h2>
+        <fieldset class="radio-list">
+          <legend class="sr-only">ご用途を1つ選択</legend>
+          <label><input type="radio" name="purpose" value="誕生日" required><span>誕生日</span></label>
+          <label><input type="radio" name="purpose" value="送別／退職"><span>送別／退職</span></label>
+          <label><input type="radio" name="purpose" value="結婚祝い"><span>結婚祝い</span></label>
+          <label><input type="radio" name="purpose" value="結婚記念日"><span>結婚記念日</span></label>
+          <label><input type="radio" name="purpose" value="開店／周年祝い"><span>開店／周年祝い</span></label>
+          <label><input type="radio" name="purpose" value="発表会／公演／個展"><span>発表会／公演／個展</span></label>
+          <label><input type="radio" name="purpose" value="その他のお祝い"><span>その他のお祝い</span></label>
+          <label><input type="radio" name="purpose" value="お供え"><span>お供え</span></label>
+          <label><input type="radio" name="purpose" value="ご自宅用"><span>ご自宅用</span></label>
+          <label><input type="radio" name="purpose" value="なんでもない日の贈りもの"><span>なんでもない日の贈りもの</span></label>
+          <label><input type="radio" name="purpose" value="その他"><span>その他</span></label>
+        </fieldset>
+        <div class="conditional" data-show-when="purpose:その他">
+          <label for="purposeOther">その他のご用途 <span class="optional">任意</span></label>
+          <input id="purposeOther" name="purposeOther" type="text" maxlength="200">
+        </div>
+      </section>
+
+      <section class="form-section" aria-labelledby="receive-heading">
+        <div class="section-number">03</div>
+        <h2 id="receive-heading"><span id="receive-heading-text">お受け取り方法・日時</span> <span class="required">必須</span></h2>
+        <div id="receive-method-options">
+          <fieldset class="segmented">
+            <legend class="sr-only">受け取り方法</legend>
+            <label><input type="radio" name="receiveMethod" value="店頭受け取り" required><span>店頭受け取り</span></label>
+            <label><input type="radio" name="receiveMethod" value="配送"><span>配送</span></label>
+          </fieldset>
+        </div>
+        <div id="stand-date-fields" class="conditional" hidden>
+          <div class="date-field-wrap"><input id="standDate" name="standDate" type="date" aria-label="お届け希望日"><span class="date-placeholder" aria-hidden="true">選択してください</span></div>
+          <p class="note date-note">※水曜日は定休日です。ご希望の場合は、対応可否を確認のうえご連絡いたします。</p>
+          <div class="note stand-note"><strong>【お祝いスタンド花ご注文の方へ】</strong><br>設置時間・回収時間については、ご注文内容を確認後にご相談させていただきます。</div>
+        </div>
+        <div class="conditional two-column" data-show-when="receiveMethod:店頭受け取り">
+          <div><label for="pickupDate">希望受取日 <span class="required">必須</span></label><div class="date-field-wrap"><input id="pickupDate" name="pickupDate" type="date"><span class="date-placeholder" aria-hidden="true">選択してください</span></div><p class="note date-note">※水曜日は定休日です。ご希望の場合は、対応可否を確認のうえご連絡いたします。</p></div>
+          <div><label for="pickupTime">希望時間 <span class="required">必須</span></label><select id="pickupTime" name="pickupTime"><option value="">選択してください</option><option>10:00</option><option>10:15</option><option>10:30</option><option>10:45</option><option>11:00</option><option>11:15</option><option>11:30</option><option>11:45</option><option>12:00</option><option>12:15</option><option>12:30</option><option>12:45</option><option>13:00</option><option>13:15</option><option>13:30</option><option>13:45</option><option>14:00</option><option>14:15</option><option>14:30</option><option>14:45</option><option>15:00</option><option>15:15</option><option>15:30</option><option>15:45</option><option>16:00</option><option>16:15</option><option>16:30</option><option>16:45</option><option>17:00</option><option>17:15</option><option>17:30</option><option>17:45</option><option>18:00</option></select></div>
+        </div>
+        <div class="conditional two-column" data-show-when="receiveMethod:配送">
+          <div><label for="deliveryDate">希望到着日 <span class="required">必須</span></label><div class="date-field-wrap"><input id="deliveryDate" name="deliveryDate" type="date"><span class="date-placeholder" aria-hidden="true">選択してください</span></div><p class="note date-note">※水曜日は定休日です。ご希望の場合は、対応可否を確認のうえご連絡いたします。</p></div>
+          <div><label for="deliveryTime">希望時間帯 <span class="required">必須</span></label><select id="deliveryTime" name="deliveryTime"><option value="">選択してください</option><option>午前中</option><option>14:00〜16:00</option><option>16:00〜18:00</option><option>18:00〜20:00</option><option>19:00〜21:00</option><option>指定なし</option></select></div>
+        </div>
+        <div class="info-box"><strong>ご注文について</strong><p>お花の仕入れは、基本的に月曜日・金曜日となります。<br>ご希望に合わせてご用意するため、月曜入荷分は日曜15:00まで、金曜入荷分は木曜15:00までのご注文をおすすめしています。</p><p>直前でも在庫状況によりご用意できる場合があります。お急ぎの場合も、まずはフォームよりお問い合わせください。</p></div>
+        <div class="conditional note" data-show-when="receiveMethod:配送">※お届け先の地域や季節・気温によって、配送方法をご相談させていただく場合があります。天候等により安全にお届けすることが難しいと判断した場合は、配送をお断りすることがあります。</div>
+      </section>
+
+      <section class="form-section" aria-labelledby="budget-heading">
+        <div class="section-number">04</div>
+        <h2 id="budget-heading">ご予算</h2>
+        <label for="budget">ご予算額 <span class="required">必須</span></label>
+        <div class="input-suffix"><input id="budget" name="budget" type="number" inputmode="numeric" min="1" max="10000000" step="1" placeholder="例：5000" required><span>円</span></div>
+        <fieldset class="inline-options"><legend>消費税 <span class="required">必須</span></legend><label><input type="radio" name="tax" value="予算に含む" required><span>予算に含む</span></label><label><input type="radio" name="tax" value="予算に含まない"><span>予算に含まない</span></label></fieldset>
+        <fieldset class="inline-options conditional" data-show-when="receiveMethod:配送"><legend>送料 <span class="required">必須</span></legend><label><input type="radio" name="shipping" value="予算に含む"><span>予算に含む</span></label><label><input type="radio" name="shipping" value="予算に含まない"><span>予算に含まない</span></label></fieldset>
+        <p class="note">※アレンジメントは税抜5,000円（税込5,500円）〜、お祝いスタンド花は税抜30,000円（税込33,000円）〜承ります。送料・配送料・回収費等は別途となります。</p>
+      </section>
+
+      <div class="gift-only" data-hide-when="purpose:ご自宅用">
+        <section class="form-section" aria-labelledby="recipient-heading">
+          <div class="section-number">05</div><h2 id="recipient-heading">贈る方について <span class="optional">任意</span></h2>
+          <label for="recipientProfile">どんな方へ贈るお花ですか？</label>
+          <p class="field-help">お人柄や雰囲気、お好きなもの、お送りする方との関係など、よろしければお聞かせください。</p>
+          <textarea id="recipientProfile" name="recipientProfile" rows="5" maxlength="1000"></textarea>
+        </section>
+        <section class="form-section" aria-labelledby="feeling-heading">
+          <div class="section-number">06</div><h2 id="feeling-heading">このお花に込めたい想い <span class="optional">任意</span></h2>
+          <p class="field-help">お祝いの気持ち、感謝、労いなど、今回お花を贈ろうと思ったお気持ちがあればお聞かせください。</p>
+          <textarea id="feeling" name="feeling" rows="5" maxlength="1000"></textarea>
+        </section>
+      </div>
+
+      <section class="form-section" aria-labelledby="flower-heading">
+        <div class="section-number">07</div><h2 id="flower-heading">お花についてのご希望 <span class="optional">任意</span></h2>
+        <p class="field-help">お花や色について、ご希望がある場合のみお聞かせください。<br>特にない場合は空欄で大丈夫です。</p>
+        <p class="note flower-note">※季節や仕入れ状況により、ご希望のお花をご用意できない場合があります。できる限りご希望を伺いながら、その日に出会えるお花でお作りいたします。</p>
+        <textarea id="flowerRequest" name="flowerRequest" rows="5" maxlength="1000"></textarea>
+      </section>
+
+      <section class="form-section gift-only" data-hide-when="purpose:ご自宅用" aria-labelledby="message-heading">
+        <div class="section-number">08</div><h2 id="message-heading">メッセージカード・立札</h2>
+        <fieldset class="radio-list"><legend class="sr-only">メッセージカードまたは立札</legend><label><input type="radio" name="messageType" value="希望しない" checked><span>希望しない</span></label><label><input type="radio" name="messageType" value="メッセージカード"><span>メッセージカード</span></label><label><input type="radio" name="messageType" value="立札"><span>立札</span></label></fieldset>
+        <div class="conditional" data-show-values="messageType:メッセージカード,立札"><label for="messageContent"><span id="message-content-label">記載内容</span> <span class="required">必須</span></label><textarea id="messageContent" name="messageContent" rows="5" maxlength="500"></textarea></div>
+      </section>
+
+      <section class="form-section" aria-labelledby="customer-heading">
+        <div class="section-number">09</div><h2 id="customer-heading">ご注文者さま情報</h2>
+        <div class="field-stack"><div><label for="customerName">お名前 <span class="required">必須</span></label><input id="customerName" name="customerName" type="text" autocomplete="name" maxlength="100" required></div><div><label for="phone">電話番号 <span class="required">必須</span></label><input id="phone" name="phone" type="tel" inputmode="numeric" autocomplete="tel" minlength="10" maxlength="11" pattern="[0-9]{10,11}" placeholder="例：09012345678" required></div><div><label for="email">メールアドレス <span class="required">必須</span></label><input id="email" name="email" type="email" inputmode="email" autocomplete="email" maxlength="254" placeholder="例：name@example.com" required><p class="note email-note">※ご注文内容の確認・ご連絡は、ご入力いただいたメールアドレスへお送りします。</p></div><div class="conditional customer-address" data-show-when="receiveMethod:配送"><label for="customerPostal">郵便番号 <span class="required">必須</span></label><input id="customerPostal" name="customerPostal" type="text" inputmode="numeric" autocomplete="postal-code" maxlength="8" placeholder="例：123-4567"></div><div class="conditional customer-address" data-show-when="receiveMethod:配送"><label for="customerAddress">住所 <span class="required">必須</span></label><input id="customerAddress" name="customerAddress" type="text" autocomplete="street-address" maxlength="300"></div></div>
+      </section>
+
+      <section id="delivery-info-section" class="form-section conditional" data-show-when="receiveMethod:配送" aria-labelledby="delivery-heading">
+        <div class="section-number">10</div><h2 id="delivery-heading">配送先情報</h2>
+        <label class="copy-check"><input type="checkbox" id="sameAsCustomer" name="sameAsCustomer" value="ご注文者さまと同じ"><span>ご注文者さまと同じ</span></label>
+        <div class="field-stack"><div><label for="recipientName">お名前 <span class="required">必須</span></label><input id="recipientName" name="recipientName" type="text" maxlength="100"></div><div><label for="recipientPostal">郵便番号 <span class="required">必須</span></label><input id="recipientPostal" name="recipientPostal" type="text" inputmode="numeric" maxlength="8" placeholder="例：123-4567"></div><div><label for="recipientAddress">住所 <span class="required">必須</span></label><input id="recipientAddress" name="recipientAddress" type="text" maxlength="300"></div><div><label for="recipientPhone">電話番号 <span class="required">必須</span></label><input id="recipientPhone" name="recipientPhone" type="tel" inputmode="numeric" minlength="10" maxlength="11" pattern="[0-9]{10,11}" placeholder="例：09012345678"></div></div>
+      </section>
+
+      <section class="form-section" aria-labelledby="payment-heading">
+        <div class="section-number">11</div><h2 id="payment-heading">お支払いについて</h2>
+        <div class="info-box"><p>店頭受け取りの場合は、店頭でのお支払いが可能です。</p><p>配送など事前のお支払いが必要な場合は、ご注文内容を確認後、お支払い方法をご案内いたします。</p><p>初めてご利用のお客さまは、銀行振込でのお支払いをお願いしております。</p></div>
+      </section>
+
+      <section class="form-section confirmation" aria-labelledby="confirm-heading">
+        <div class="section-number">12</div><h2 id="confirm-heading">ご注文前の確認事項</h2>
+        <dl><div><dt>花材・ボリュームについて</dt><dd>季節や仕入れ状況により、使用する花材やボリュームは変わります。</dd></div><div><dt>仕上がりについて</dt><dd>過去の制作例と同じ花材・仕上がりでの制作は承っておりません。</dd></div><div><dt>ご注文の確定について</dt><dd>フォーム送信のみではご注文確定となりません。<br>内容を確認後、sastRよりご注文についてご連絡いたします。<br>事前のお支払いが必要な場合は、ご入金確認後にご注文確定となります。</dd></div><div><dt>キャンセルについて</dt><dd>ご注文確定後、花材の仕入れ後のキャンセルは商品代金の50％、制作開始後および当日のキャンセルは商品代金の100％をキャンセル料として頂戴します。<br><small>※仕入れのタイミングは、ご注文内容や市場の状況により異なります。注文受付後、仕入れ予定について個別にご案内します。</small></dd></div></dl>
+        <label class="confirm-check"><input type="checkbox" name="confirmed" value="確認済み" required><span>上記内容を確認しました <b class="required">必須</b></span></label>
+      </section>
+
+      <div id="form-error" class="notice error" role="alert" hidden></div>
+      <button id="submit-button" class="submit-button" type="submit"><span class="button-label">注文内容を送信する</span><span class="button-loading" hidden>送信しています…</span></button>
+      <p class="submit-note">送信後、内容を確認のうえ、原則24時間以内にご入力いただいたメールアドレスへsastRよりご連絡いたします。<br>24時間を過ぎても返信がない場合は、お手数ですがInstagramのDMよりお問い合わせください。</p>
+    </form>
+
+    <section id="success-screen" class="success-screen" hidden tabindex="-1">
+      <div class="success-mark" aria-hidden="true">✓</div>
+      <p class="eyebrow">THANK YOU</p>
+      <h2>ご注文内容を送信しました💐</h2>
+      <p>ありがとうございます。<br>内容を確認のうえ、sastRよりご連絡いたします。</p>
+      <div class="info-box"><strong>この時点ではご注文確定ではありません。</strong><p>sastRからの返信をお待ちください。</p></div>
+    </section>
+  </main>
+  <iframe name="submit-frame" id="submit-frame" title="送信結果" hidden></iframe>
+</body>
+</html>

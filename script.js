@@ -147,7 +147,7 @@
     if (!field.value) return '';
     // 店頭受取・スタンド花は休業日そのものを受付不可にする。
     if (field.id === 'pickupDate' || field.id === 'standDate') {
-      return inClosedRange(field.value) ? 'この日は休業のため、ご予約を承ることができません。別の日をお選びください。' : '';
+      return inClosedRange(field.value) ? 'この日はご注文を承ることができません。別の日をお選びください。' : '';
     }
     if (field.id === 'deliveryDate') {
       // 配送は地域により発送が到着1〜2日前になるため、到着日から逆算した発送候補日が

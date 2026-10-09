@@ -259,7 +259,8 @@
           setInquirySending(false);
           document.getElementById('form-content').hidden = true;
           const success = document.getElementById('success-screen');
-          success.querySelector('h2').textContent = 'お問い合わせを送信しました';
+          success.classList.add('inquiry-success');
+          success.querySelector('h2').innerHTML = 'お問い合わせを<br>送信しました';
           const paragraphs = success.querySelectorAll(':scope > p');
           paragraphs[1].innerHTML = 'ありがとうございます。<br>内容を確認のうえ、sastRよりご連絡いたします。';
           paragraphs[2].textContent = '原則24時間以内にご連絡いたします。';

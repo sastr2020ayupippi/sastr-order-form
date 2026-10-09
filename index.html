@@ -27,17 +27,20 @@
     </nav>
     <section id="inquiry-panel" hidden>
       <h2>お問い合わせ</h2><p class="note">お気軽にお問い合わせください。</p>
-      <form id="inquiry-form" novalidate>
+      <form id="inquiry-form" method="post" target="submit-frame" novalidate>
+        <input type="text" name="website" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true">
+        <input type="hidden" name="formType" value="inquiry">
+        <input type="hidden" name="formStartedAt" id="inquiryFormStartedAt">
         <div class="field-stack">
           <div><label for="inquiryMessage">お問い合わせ内容 <span class="required">必須</span></label><textarea id="inquiryMessage" name="inquiryMessage" rows="6" maxlength="3000" required placeholder="お問い合わせ内容をご記入ください"></textarea></div>
           <div><label for="inquiryName">お名前 <span class="required">必須</span></label><input id="inquiryName" name="inquiryName" maxlength="100" autocomplete="name" required></div>
-          <div><label for="inquiryEmail">メールアドレス <span class="required">必須</span></label><input id="inquiryEmail" name="inquiryEmail" type="email" maxlength="254" autocomplete="email" required placeholder="example@email.com"></div>
-          <fieldset><legend>ご希望の返信方法 <span class="required">必須</span></legend><div class="segmented"><label><input type="radio" name="inquiryReply" value="email" checked><span>メール</span></label><label><input type="radio" name="inquiryReply" value="dm"><span>Instagram DM</span></label></div></fieldset>
-          <div id="inquiry-instagram-fields" hidden><label for="inquiryInstagram">Instagramアカウント <span class="required">必須</span></label><input id="inquiryInstagram" name="inquiryInstagram" maxlength="100" placeholder="@username"><p class="note">※鍵アカウントの場合、こちらからのDMがお送りできない場合がございます。万が一ダイレクトメッセージ（DM）がお送りできない場合にはメールにて返信させていただきます。</p></div>
+          <div><label for="inquiryEmail">メールアドレス <span class="required">必須</span></label><input id="inquiryEmail" name="email" type="email" maxlength="254" autocomplete="email" required placeholder="example@email.com"></div>
+          <fieldset><legend>ご希望の返信方法 <span class="required">必須</span></legend><div class="segmented"><label><input type="radio" name="replyMethod" value="email" checked><span>メール</span></label><label><input type="radio" name="replyMethod" value="dm"><span>Instagram DM</span></label></div></fieldset>
+          <div id="inquiry-instagram-fields" hidden><label for="inquiryInstagram">Instagramアカウント <span class="required">必須</span></label><input id="inquiryInstagram" name="instagramAccount" maxlength="100" placeholder="@username"><p class="note">※鍵アカウントの場合、こちらからのDMがお送りできない場合がございます。万が一ダイレクトメッセージ（DM）がお送りできない場合にはメールにて返信させていただきます。</p></div>
         </div>
         <p class="submit-note">内容を確認のうえ、原則24時間以内にご連絡いたします。</p>
-        <button class="submit-button" type="submit" disabled>お問い合わせを送信する</button>
-        <p class="submit-note">PREVIEW ONLY｜現在は送信できません</p>
+        <div id="inquiry-error" class="notice error" role="alert" hidden></div>
+        <button id="inquiry-submit-button" class="submit-button" type="submit"><span class="button-label">お問い合わせを送信する</span><span class="button-loading" hidden>送信しています…</span></button>
       </form>
     </section>
     <div id="order-panel">
@@ -197,16 +200,75 @@
         order.hidden = isInquiry; inquiry.hidden = !isInquiry;
         choices.forEach(b => { b.classList.toggle('is-active', b === button); b.setAttribute('aria-pressed', String(b === button)); });
       }));
-      const radios = document.querySelectorAll('[name="inquiryReply"]');
+      const radios = document.querySelectorAll('[name="replyMethod"]');
       const instagram = document.getElementById('inquiry-instagram-fields');
+      const inquiryForm = document.getElementById('inquiry-form');
+      const inquiryButton = document.getElementById('inquiry-submit-button');
+      const inquiryError = document.getElementById('inquiry-error');
+      const inquiryUrl = 'https://script.google.com/macros/s/AKfycbzEHvRXKX_MSrotdrHXk4Z4tG0BVgwd0wmMjSiCQWZREmEg4ftOaFY3xkQZuzcIo40/exec';
+      let inquirySending = false;
+      let inquiryTimeout;
       const handleReply = () => {
-        const dm = document.querySelector('[name="inquiryReply"]:checked')?.value === 'dm';
+        const dm = document.querySelector('[name="replyMethod"]:checked')?.value === 'dm';
         instagram.hidden = !dm;
         document.getElementById('inquiryInstagram').required = dm;
       };
+      const setInquirySending = active => {
+        inquirySending = active;
+        inquiryButton.disabled = active;
+        inquiryButton.querySelector('.button-label').hidden = active;
+        inquiryButton.querySelector('.button-loading').hidden = !active;
+      };
+      const showInquiryError = message => {
+        clearTimeout(inquiryTimeout);
+        setInquirySending(false);
+        inquiryError.textContent = message;
+        inquiryError.hidden = false;
+        inquiryError.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      };
       radios.forEach(r => r.addEventListener('change', handleReply));
       handleReply();
-      document.getElementById('inquiry-form').addEventListener('submit', event => event.preventDefault());
+      inquiryForm.action = inquiryUrl;
+      document.getElementById('inquiryFormStartedAt').value = String(Date.now());
+      inquiryForm.addEventListener('input', event => event.target.setCustomValidity?.(''));
+      inquiryForm.addEventListener('submit', event => {
+        inquiryError.hidden = true;
+        if (!inquiryForm.checkValidity()) {
+          event.preventDefault();
+          const invalid = inquiryForm.querySelector(':invalid');
+          invalid?.reportValidity();
+          invalid?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          return;
+        }
+        if (inquirySending) {
+          event.preventDefault();
+          return;
+        }
+        setInquirySending(true);
+        inquiryTimeout = setTimeout(() => showInquiryError('送信結果を確認できませんでした。通信環境をご確認のうえ、もう一度お試しください。'), 30000);
+      });
+      window.addEventListener('message', event => {
+        const data = event.data;
+        if (!data || data.source !== 'sastr-order-form' || data.formType !== 'inquiry') return;
+        setTimeout(() => {
+          clearTimeout(inquiryTimeout);
+          if (!data.ok) {
+            showInquiryError(data.message || '送信できませんでした。時間をおいて再度お試しください。');
+            return;
+          }
+          setInquirySending(false);
+          document.getElementById('form-content').hidden = true;
+          const success = document.getElementById('success-screen');
+          success.querySelector('h2').textContent = 'お問い合わせを送信しました';
+          const paragraphs = success.querySelectorAll(':scope > p');
+          paragraphs[1].innerHTML = 'ありがとうございます。<br>内容を確認のうえ、sastRよりご連絡いたします。';
+          paragraphs[2].textContent = '原則24時間以内にご連絡いたします。';
+          success.querySelector('.info-box').innerHTML = '<strong>※自動返信メールは送信していません。</strong><p>sastRからの返信をお待ちください。</p>';
+          success.hidden = false;
+          success.focus();
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        }, 0);
+      });
     })();
   </script>
   <iframe name="submit-frame" id="submit-frame" title="送信結果" hidden></iframe>

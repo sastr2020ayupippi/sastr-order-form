@@ -4,3 +4,6 @@
 
 /* Inquiry preview branch: existing order form untouched */
 .entry-choices{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:48px 0 28px}.entry-choice{background:#fff;border:1px solid var(--line);border-radius:8px;text-align:left;padding:22px 18px;cursor:pointer;color:var(--ink);font:inherit}.entry-choice.is-active{border:2px solid var(--brand-dark);background:rgba(145,111,112,.055);padding:21px 17px}.entry-choice strong{display:block;font-size:1.05rem}.entry-choice small{display:block;font-size:.86rem;color:var(--muted);font-weight:400;margin-top:10px}#inquiry-panel{padding:28px 0 40px}#inquiry-panel .field-stack{margin-top:28px}#inquiry-panel legend{margin-bottom:12px}#inquiry-panel [hidden],#order-panel[hidden]{display:none!important}@media(max-width:680px){.entry-choices{gap:8px;margin:32px 0 24px}.entry-choice{padding:13px 10px}.entry-choice.is-active{padding:12px 9px}.entry-choice strong{font-size:.96rem}.entry-choice small{font-size:.78rem}}
+
+/* Inquiry completion screen only: center the no-auto-reply note. */
+.success-screen.inquiry-success .info-box{text-align:center}

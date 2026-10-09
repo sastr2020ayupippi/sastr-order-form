@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="sastR 花束・アレンジメント注文フォーム">
-  <title>sastR｜花束・アレンジメントのご注文</title>
+  <meta name="description" content="sastR ご注文・お問い合わせ">
+  <title>sastR｜ご注文・お問い合わせ</title>
   <link rel="stylesheet" href="./styles.css">
   <script src="./script.js" defer></script>
 </head>
@@ -13,14 +13,34 @@
     <div id="form-content">
     <header class="hero">
       <img class="brand-logo" src="./assets/sastr-logo.png" alt="sastR - stop and smell the Roses.">
-      <p class="eyebrow">ORDER FORM</p>
-      <h1>花束・アレンジメントのご注文</h1>
-      <p>sastRでは、その日に出会える季節のお花を使って<br>花束やアレンジメントをお作りしています。</p>
-      <p>ご用途やイメージ、好きな雰囲気などを<br class="mobile-break">お聞かせください。<br>お伺いした内容をもとに、<br class="mobile-break">お花を選んでお作りします💐</p>
+      <p class="eyebrow">ORDER & INQUIRY</p>
+      <h1>ご注文・お問い合わせ</h1>
+      <p>ご希望の内容をお選びください。</p>
+      
     </header>
 
     <noscript><div class="notice error">このフォームの送信にはJavaScriptが必要です。ブラウザの設定でJavaScriptを有効にしてください。</div></noscript>
 
+    <nav class="entry-choices" aria-label="受付内容">
+      <button type="button" class="entry-choice is-active" data-entry="order"><strong>ギフト注文</strong><small>花束・アレンジメントなどのご注文</small></button>
+      <button type="button" class="entry-choice" data-entry="inquiry"><strong>お問い合わせ</strong><small>ご質問・ご相談はこちらから</small></button>
+    </nav>
+    <section id="inquiry-panel" hidden>
+      <h2>お問い合わせ</h2><p class="note">お気軽にお問い合わせください。</p>
+      <form id="inquiry-form" novalidate>
+        <div class="field-stack">
+          <div><label for="inquiryMessage">お問い合わせ内容 <span class="required">必須</span></label><textarea id="inquiryMessage" name="inquiryMessage" rows="6" maxlength="3000" required placeholder="お問い合わせ内容をご記入ください"></textarea></div>
+          <div><label for="inquiryName">お名前 <span class="required">必須</span></label><input id="inquiryName" name="inquiryName" maxlength="100" autocomplete="name" required></div>
+          <div><label for="inquiryEmail">メールアドレス <span class="required">必須</span></label><input id="inquiryEmail" name="inquiryEmail" type="email" maxlength="254" autocomplete="email" required placeholder="example@email.com"></div>
+          <fieldset><legend>ご希望の返信方法 <span class="required">必須</span></legend><div class="segmented"><label><input type="radio" name="inquiryReply" value="email" checked><span>メール</span></label><label><input type="radio" name="inquiryReply" value="dm"><span>Instagram DM</span></label></div></fieldset>
+          <div id="inquiry-instagram-fields" hidden><label for="inquiryInstagram">Instagramアカウント <span class="required">必須</span></label><input id="inquiryInstagram" name="inquiryInstagram" maxlength="100" placeholder="@username"><p class="note">※鍵アカウントの場合、こちらからのDMがお送りできない場合がございます。万が一ダイレクトメッセージ（DM）がお送りできない場合にはメールにて返信させていただきます。</p></div>
+        </div>
+        <p class="submit-note">内容を確認のうえ、原則24時間以内にご連絡いたします。</p>
+        <button class="submit-button" type="submit" disabled>お問い合わせを送信する</button>
+        <p class="submit-note">PREVIEW ONLY｜現在は送信できません</p>
+      </form>
+    </section>
+    <div id="order-panel">
     <form id="order-form" class="order-form" method="post" target="submit-frame" novalidate>
       <input type="text" name="website" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true">
       <input type="hidden" name="formStartedAt" id="formStartedAt">
@@ -156,6 +176,7 @@
       <p class="submit-note">送信後、内容を確認のうえ、原則24時間以内にご入力いただいたメールアドレスへsastRよりご連絡いたします。<br>24時間を過ぎても返信がない場合は、お手数ですがInstagramのDMよりお問い合わせください。</p>
     </form>
     </div>
+    </div>
 
     <section id="success-screen" class="success-screen" hidden tabindex="-1">
       <div class="success-mark" aria-hidden="true">✓</div>
@@ -166,6 +187,28 @@
       <div class="info-box"><strong>※この時点ではご注文確定ではありません。</strong><p>sastRからの返信をお待ちください。</p></div>
     </section>
   </main>
+  <script>
+    (() => {
+      const choices = document.querySelectorAll('[data-entry]');
+      const order = document.getElementById('order-panel');
+      const inquiry = document.getElementById('inquiry-panel');
+      choices.forEach(button => button.addEventListener('click', () => {
+        const isInquiry = button.dataset.entry === 'inquiry';
+        order.hidden = isInquiry; inquiry.hidden = !isInquiry;
+        choices.forEach(b => { b.classList.toggle('is-active', b === button); b.setAttribute('aria-pressed', String(b === button)); });
+      }));
+      const radios = document.querySelectorAll('[name="inquiryReply"]');
+      const instagram = document.getElementById('inquiry-instagram-fields');
+      const handleReply = () => {
+        const dm = document.querySelector('[name="inquiryReply"]:checked')?.value === 'dm';
+        instagram.hidden = !dm;
+        document.getElementById('inquiryInstagram').required = dm;
+      };
+      radios.forEach(r => r.addEventListener('change', handleReply));
+      handleReply();
+      document.getElementById('inquiry-form').addEventListener('submit', event => event.preventDefault());
+    })();
+  </script>
   <iframe name="submit-frame" id="submit-frame" title="送信結果" hidden></iframe>
 </body>
 </html>
